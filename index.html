@@ -65,11 +65,7 @@
             display: block;
         }
 
-        .login-logo {
-            width: 200px;
-            height: auto;
-            margin-bottom: 30px;
-        }
+
 
         .login-container h1 {
             font-size: 1.8rem;
@@ -424,13 +420,8 @@
 
     <!-- LOGIN SCREEN -->
     <div class="login-container active" id="loginContainer">
-        <svg class="login-logo" viewBox="0 0 450 100" xmlns="http://www.w3.org/2000/svg">
-            <text x="20" y="65" font-family="'Segoe UI', Arial, sans-serif" font-size="44" fill="#0076df" font-weight="300">grupo</text>
-            <text x="135" y="65" font-family="'Segoe UI', Arial, sans-serif" font-size="44" fill="#0076df" font-weight="700">Multilaser</text>
-        </svg>
-        
-        <h1>Acesso Restrito</h1>
-        <p>Digite a senha para acessar o sistema de relatórios</p>
+        <h1>🔒 Acesso Restrito</h1>
+        <p>Digite a senha para continuar</p>
         
         <form class="login-form" onsubmit="handleLogin(event)">
             <input type="password" id="loginPassword" placeholder="Senha" autocomplete="off" required>
