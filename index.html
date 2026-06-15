@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de Relatórios de Manutenção Preventiva HVAC">
+    <meta name="theme-color" content="#0076df">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="HVAC Preventiva">
+    
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" href="./icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="./icons/icon-192x192.png">
+    
+    <title>Preventiva HVAC - Grupo Multilaser</title>
+    <script src="./jspdf.umd.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #0076df;
+            --text-color: #1a1a1a;
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --border-color: #cccccc;
+            --success-color: #2e7d32;
+            --warning-color: #ef6c00;
+            --danger-color: #c62828;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* LOGIN SCREEN */
+        .login-container {
+            display: none;
+            width: 100%;
+            max-width: 400px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 40px 30px;
+            text-align: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+        }
+
+        .login-container.active {
+            display: block;
+        }
+
+        .login-logo {
+            width: 200px;
+            height: auto;
+            margin-bottom: 30px;
+        }
+
+        .login-container h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .login-container p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .login-form input {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .login-form input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .login-form button {
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .login-form button:hover {
+            background-color: #005cbd;
+        }
+
+        .login-form button:active {
+            transform: scale(0.98);
+        }
+
+        .login-error {
+            color: var(--danger-color);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .login-error.show {
+            display: block;
+        }
+
+        .remember-login {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .remember-login input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* APP CONTAINER */
+        .app-container {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            flex-direction: column;
+            min-height: 85vh;
+        }
+
+        .app-container.active {
+            display: flex;
+        }
+
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--bg-color);
+            position: relative;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: #f0f0f0;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #666;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .offline-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: #4caf50;
+            color: white;
+            display: none;
+        }
+
+        .offline-indicator.offline {
+            background-color: #f44336;
+            display: block;
+        }
+
+        .logo-svg {
+            width: 220px;
+            height: auto;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background-color: #e0e0e0;
+            width: 100%;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 9%;
+            transition: width 0.3s ease;
+        }
+
+        .screen {
+            display: none;
+            padding: 25px;
+            flex-grow: 1;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #444;
+        }
+
+        input[type="text"], input[type="date"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            background-color: #fafafa;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary-color);
+            background-color: #fff;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .camera-container {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 30px 15px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            background: #fafafa;
+            transition: all 0.2s;
+        }
+
+        .camera-container:hover {
+            border-color: var(--primary-color);
+            background: #f0f7ff;
+        }
+
+        .camera-container.has-image {
+            border-color: var(--success-color);
+            background: #f1f8e9;
+        }
+
+        .camera-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .image-preview {
+            margin-top: 15px;
+            width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 6px;
+            display: none;
+            border: 1px solid #ddd;
+        }
+
+        .btn-container {
+            margin-top: auto;
+            padding: 20px 0 0 0;
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-next {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-next:hover { background-color: #005cbd; }
+
+        .btn-prev {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-prev:hover { background-color: #d2d2d2; }
+
+        .btn-generate {
+            background-color: var(--success-color);
+            color: white;
+        }
+        .btn-generate:hover { background-color: #235e26; }
+
+        .status-option {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .status-option input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .status-liberado { border-left: 6px solid var(--success-color); }
+        .status-ressalvas { border-left: 6px solid var(--warning-color); }
+        .status-corretiva { border-left: 6px solid var(--danger-color); }
+
+        .status-option.selected {
+            background-color: #f1f8e9;
+            border-color: var(--success-color);
+        }
+        .status-option.selected.status-ressalvas {
+            background-color: #fff3e0;
+            border-color: var(--warning-color);
+        }
+        .status-option.selected.status-corretiva {
+            background-color: #ffebee;
+            border-color: var(--danger-color);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN SCREEN -->
+    <div class="login-container active" id="loginContainer">
+        <svg class="login-logo" viewBox="0 0 450 100" xmlns="http://www.w3.org/2000/svg">
+            <text x="20" y="65" font-family="'Segoe UI', Arial, sans-serif" font-size="44" fill="#0076df" font-weight="300">grupo</text>
+            <text x="135" y="65" font-family="'Segoe UI', Arial, sans-serif" font-size="44" fill="#0076df" font-weight="700">Multilaser</text>
+        </svg>
+        
+        <h1>Acesso Restrito</h1>
+        <p>Digite a senha para acessar o sistema de relatórios</p>
+        
+        <form class="login-form" onsubmit="handleLogin(event)">
+            <input type="password" id="loginPassword" placeholder="Senha" autocomplete="off" required>
+            <label class="remember-login">
+                <input type="checkbox" id="rememberLogin">
+                Lembrar neste aparelho
+            </label>
+            <button type="submit">Entrar</button>
+            <div class="login-error" id="loginError">Senha incorreta. Tente novamente.</div>
+        </form>
+    </div>
+
+    <div class="spinner" id="loadingSpinner">
+        <div class="loader"></div>
+        <div>Comprimindo e Otimizando Relatório...</div>
+    </div>
+
+    <div class="app-container" id="appContainer">
+        <div class="header">
+            <div class="offline-indicator" id="offlineIndicator">Offline</div>
+            <button class="logout-btn" onclick="handleLogout()">Sair</button>
+            <svg class="logo-svg" viewBox="0 0 450 100" xmlns="http://www.w3.org/2000/svg">
+                <text x="20" y="65" font-family="'Segoe UI', Arial, sans-serif" font-size="44" fill="#0076df" font-weight="300">grupo</text>
+                <text x="135" y="65" font-family="'Segoe UI', Arial, sans-serif" font-size="44" fill="#0076df" font-weight="700">Multilaser</text>
+            </svg>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <form id="reportForm" onsubmit="return false;">
+            
+            <div class="screen active" id="screen1">
+                <h2>Identificação Inicial</h2>
+                <div class="form-group">
+                    <label>Responsável Técnico *</label>
+                    <input type="text" id="responsavel" required placeholder="Nome completo">
+                </div>
+                <div class="form-group">
+                    <label>Data da Preventiva *</label>
+                    <input type="date" id="data" required>
+                </div>
+                <div class="form-group">
+                    <label>TAG do Equipamento *</label>
+                    <input type="text" id="tag" required placeholder="Ex: NOT-003">
+                </div>
+                <div class="form-group">
+                    <label>Número da Ordem de Serviço *</label>
+                    <input type="text" id="os" required placeholder="Ex: 400050855">
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Alimentação Elétrica</label>
+                    <div class="radio-group">
+                        <label class="radio-label"><input type="radio" name="tipoEquipamento" value="monofasico" checked onchange="toggleFases()"> Monofásico</label>
+                        <label class="radio-label"><input type="radio" name="tipoEquipamento" value="trifasico" onchange="toggleFases()"> Trifásico</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Foto Geral do Equipamento *</label>
+                    <div class="camera-container" onclick="triggerInput('img_equip')">
+                        <div class="camera-icon">📷</div>
+                        <span>Capturar ou Selecionar Foto</span>
+                        <input type="file" id="img_equip" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                        <img class="image-preview" id="prev_img_equip">
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn-next" onclick="nextScreen(2)">Próximo</button>
+                </div>
+            </div>
+
+            <div class="screen" id="screen2">
+                <h2>Evaporador Antes da Limpeza</h2>
+                <div class="form-group">
+                    <label>Foto Obrigatória *</label>
+                    <div class="camera-container" onclick="triggerInput('img_evap_antes')">
+                        <div class="camera-icon">📷</div>
+                        <span>Capturar ou Selecionar Foto</span>
+                        <input type="file" id="img_evap_antes" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                        <img class="image-preview" id="prev_img_evap_antes">
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn-prev" onclick="prevScreen(1)">Voltar</button>
+                    <button type="button" class="btn-next" onclick="nextScreen(3)">Próximo</button>
+                </div>
+            </div>
+
+            <div class="screen" id="screen3">
+                <h2>Evaporador Após Limpeza</h2>
+                <div class="form-group">
+                    <label>Foto Obrigatória *</label>
+                    <div class="camera-container" onclick="triggerInput('img_evap_depois')">
+                        <div class="camera-icon">📷</div>
+                        <span>Capturar ou Selecionar Foto</span>
+                        <input type="file" id="img_evap_depois" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                        <img class="image-preview" id="prev_img_evap_depois">
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn-prev" onclick="prevScreen(2)">Voltar</button>
+                    <button type="button" class="btn-next" onclick="nextScreen(4)">Próximo</button>
+                </div>
+            </div>
+
+            <div class="screen" id="screen4">
+                <h2>Filtro Antes da Limpeza</h2>
+                <div class="form-group">
+                    <label>Foto Obrigatória *</label>
+                    <div class="camera-container" onclick="triggerInput('img_filtro_antes')">
+                        <div class="camera-icon">📷</div>
+                        <span>Capturar ou Selecionar Foto</span>
+                        <input type="file" id="img_filtro_antes" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                        <img class="image-preview" id="prev_img_filtro_antes">
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn-prev" onclick="prevScreen(3)">Voltar</button>
+                    <button type="button" class="btn-next" onclick="nextScreen(5)">Próximo</button>
+                </div>
+            </div>
+
+            <div class="screen" id="screen5">
+                <h2>Filtro Após Limpeza</h2>
+                <div class="form-group">
+                    <label>Foto Obrigatória *</label>
+                    <div class="camera-container" onclick="triggerInput('img_filtro_depois')">
+                        <div class="camera-icon">📷</div>
+                        <span>Capturar ou Selecionar Foto</span>
+                        <input type="file" id="img_filtro_depois" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                        <img class="image-preview" id="prev_img_filtro_depois">
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn-prev" onclick="prevScreen(4)">Voltar</button>
+                    <button type="button" class="btn-next" onclick="nextScreen(6)">Próximo</button>
+                </div>
+            </div>
+
+            <div class="screen" id="screen6">
+                <h2>Condensador Antes da Limpeza</h2>
+                <div class="form-group">
+                    <label>Foto Obrigatória *</label>
+                    <div class="camera-container" onclick="triggerInput('img_cond_antes')">
+                        <div class="camera-icon">📷</div>
+                        <span>Capturar ou Selecionar Foto</span>
+                        <input type="file" id="img_cond_antes" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                        <img class="image-preview" id="prev_img_cond_antes">
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn-prev" onclick="prevScreen(5)">Voltar</button>
+                    <button type="button" class="btn-next" onclick="nextScreen(7)">Próximo</button>
+                </div>
+            </div>
+
+            <div class="screen" id="screen7">
+                <h2>Condensador Após Limpeza</h2>
+                <div class="form-group">
+                    <label>Foto Obrigatória *</label>
+                    <div class="camera-container" onclick="triggerInput('img_cond_depois')">
+                        <div class="camera-icon">📷</div>
+                        <span>Capturar ou Selecionar Foto</span>
+                        <input type="file" id="img_cond_depois" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                        <img class="image-preview" id="prev_img_cond_depois">
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn-prev" onclick="prevScreen(6)">Voltar</button>
+                    <button type="button" class="btn-next" onclick="nextScreen(8)">Próximo</button>
+                </div>
+            </div>
+
+            <div class="screen" id="screen8">
+                <h2>Medição de Corrente Elétrica</h2>
+                
+                <div id="wrapper_corr_mono">
+                    <div class="form-group">
+                        <label>Foto da Medição de Corrente *</label>
+                        <div class="camera-container" onclick="triggerInput('img_corr_m')">
+                            <div class="camera-icon">📷</div>
+                            <span>Capturar ou Selecionar Foto</span>
+                            <input type="file" id="img_corr_m" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_corr_m">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="wrapper_corr_tri" style="display:none;">
+                    <div class="form-group">
+                        <label>Foto Fase R *</label>
+                        <div class="camera-container" onclick="triggerInput('img_corr_r')">
+                            <div class="camera-icon">📷</div>
+                            <span>Fase R</span>
+                            <input type="file" id="img_corr_r" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_corr_r">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Foto Fase S *</label>
+                        <div class="camera-container" onclick="triggerInput('img_corr_s')">
+                            <div class="camera-icon">📷</div>
+                            <span>Fase S</span>
+                            <input type="file" id="img_corr_s" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_corr_s">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Foto Fase T *</label>
+                        <div class="camera-container" onclick="triggerInput('img_corr_t')">
+                            <div class="camera-icon">📷</div>
+                            <span>Fase T</span>
+                            <input type="file" id="img_corr_t" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_corr_t">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn-prev" onclick="prevScreen(7)">Voltar</button>
+                    <button type="button" class="btn-next" onclick="nextScreen(9)">Próximo</button>
+                </div>
+            </div>
+
+            <div class="screen" id="screen9">
+                <h2>Medição de Tensão Elétrica</h2>
+                
+                <div id="wrapper_tens_mono">
+                    <div class="form-group">
+                        <label>Foto da Medição de Tensão *</label>
+                        <div class="camera-container" onclick="triggerInput('img_tens_m')">
+                            <div class="camera-icon">📷</div>
+                            <span>Capturar ou Selecionar Foto</span>
+                            <input type="file" id="img_tens_m" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_tens_m">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="wrapper_tens_tri" style="display:none;">
+                    <div class="form-group">
+                        <label>Foto Fase R *</label>
+                        <div class="camera-container" onclick="triggerInput('img_tens_r')">
+                            <div class="camera-icon">📷</div>
+                            <span>Fase R</span>
+                            <input type="file" id="img_tens_r" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_tens_r">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Foto Fase S *</label>
+                        <div class="camera-container" onclick="triggerInput('img_tens_s')">
+                            <div class="camera-icon">📷</div>
+                            <span>Fase S</span>
+                            <input type="file" id="img_tens_s" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_tens_s">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Foto Fase T *</label>
+                        <div class="camera-container" onclick="triggerInput('img_tens_t')">
+                            <div class="camera-icon">📷</div>
+                            <span>Fase T</span>
+                            <input type="file" id="img_tens_t" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_tens_t">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn-prev" onclick="prevScreen(8)">Voltar</button>
+                    <button type="button" class="btn-next" onclick="nextScreen(10)">Próximo</button>
+                </div>
+            </div>
+
+            <div class="screen" id="screen10">
+                <h2>Observações Complementares</h2>
+                <div class="form-group">
+                    <label>Notas e Não Conformidades (Opcional)</label>
+                    <textarea id="observacoes" rows="6" placeholder="Ex: Equipamento apresentou ruído excessivo no ventilador do condensador. Recomenda-se manutenção corretiva complementar."></textarea>
+                </div>
+                <div class="btn-container">
+                    <button type="button" class="btn-prev" onclick="prevScreen(9)">Voltar</button>
+                    <button type="button" class="btn-next" onclick="nextScreen(11)">Próximo</button>
+                </div>
+            </div>
+
+            <div class="screen" id="screen11">
+                <h2>Status Operacional do Equipamento</h2>
+                
+                <div class="status-option status-liberado selected" onclick="selectStatus(this, 'liberado')">
+                    <input type="radio" name="statusFinal" value="liberado" checked style="pointer-events: none;">
+                    Liberado para uso
+                </div>
+
+                <div class="status-option status-ressalvas" onclick="selectStatus(this, 'ressalvas')">
+                    <input type="radio" name="statusFinal" value="ressalvas" style="pointer-events: none;">
+                    Liberado com ressalvas
+                </div>
+
+                <div class="status-option status-corretiva" onclick="selectStatus(this, 'corretiva')">
+                    <input type="radio" name="statusFinal" value="corretiva" style="pointer-events: none;">
+                    Necessita manutenção corretiva
+                </div>
+
+                <div class="btn-container">
+                    <button type="button" class="btn-prev" onclick="prevScreen(10)">Voltar</button>
+                    <button type="button" class="btn-generate" onclick="generatePDF()">GERAR RELATÓRIO PDF</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // ============ AUTENTICAÇÃO ============
+        const CORRECT_PASSWORD = 'multilaser2024'; // Altere aqui a senha
+        
+        function handleLogin(event) {
+            event.preventDefault();
+            const password = document.getElementById('loginPassword').value;
+            const rememberCheckbox = document.getElementById('rememberLogin');
+            const errorDiv = document.getElementById('loginError');
+            
+            if (password === CORRECT_PASSWORD) {
+                errorDiv.classList.remove('show');
+                
+                if (rememberCheckbox.checked) {
+                    localStorage.setItem('hvacAuth', 'true');
+                }
+                
+                document.getElementById('loginContainer').classList.remove('active');
+                document.getElementById('appContainer').classList.add('active');
+                initializeApp();
+            } else {
+                errorDiv.classList.add('show');
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                localStorage.removeItem('hvacAuth');
+                document.getElementById('loginContainer').classList.add('active');
+                document.getElementById('appContainer').classList.remove('active');
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('rememberLogin').checked = false;
+                imagensComprimidas = {};
+                currentScreen = 1;
+                updateProgress();
+            }
+        }
+
+        // Verificar se usuário já está autenticado
+        window.addEventListener('load', function() {
+            if (localStorage.getItem('hvacAuth') === 'true') {
+                document.getElementById('loginContainer').classList.remove('active');
+                document.getElementById('appContainer').classList.add('active');
+                initializeApp();
+            }
+        });
+
+        // ============ APLICAÇÃO PRINCIPAL ============
+        
+        // Registro do Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').then((registration) => {
+                console.log('Service Worker registrado com sucesso:', registration);
+            }).catch((error) => {
+                console.log('Erro ao registrar Service Worker:', error);
+            });
+        }
+
+        // Monitorar status online/offline
+        function updateOnlineStatus() {
+            const indicator = document.getElementById('offlineIndicator');
+            if (navigator.onLine) {
+                indicator.classList.remove('offline');
+                indicator.textContent = 'Online';
+            } else {
+                indicator.classList.add('offline');
+                indicator.textContent = 'Offline';
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+
+        // Objeto global que guardará as imagens comprimidas em Base64
+        let imagensComprimidas = {};
+        let currentScreen = 1;
+        const totalScreens = 11;
+
+        function initializeApp() {
+            updateOnlineStatus();
+            document.getElementById('data').valueAsDate = new Date();
+        }
+
+        function triggerInput(id) {
+            document.getElementById(id).click();
+        }
+
+        function toggleFases() {
+            const isTrifasico = document.getElementsByName('tipoEquipamento')[1].checked;
+            
+            document.getElementById('wrapper_corr_mono').style.display = isTrifasico ? 'none' : 'block';
+            document.getElementById('wrapper_corr_tri').style.display = isTrifasico ? 'block' : 'none';
+            document.getElementById('wrapper_tens_mono').style.display = isTrifasico ? 'none' : 'block';
+            document.getElementById('wrapper_tens_tri').style.display = isTrifasico ? 'block' : 'none';
+        }
+
+        function handleFile(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const preview = document.getElementById('prev_' + input.id);
+            const container = input.closest('.camera-container');
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    const maxW = 800;
+                    const scale = maxW / img.width;
+                    canvas.width = maxW;
+                    canvas.height = img.height * scale;
+
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    
+                    const base64 = canvas.toDataURL('image/jpeg', 0.7);
+                    
+                    imagensComprimidas[input.id] = base64;
+                    preview.src = base64;
+                    preview.style.display = 'block';
+                    if (container) container.classList.add('has-image');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function selectStatus(element, val) {
+            document.querySelectorAll('.status-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            element.querySelector('input').checked = true;
+        }
+
+        function updateProgress() {
+            const pct = (currentScreen / totalScreens) * 100;
+            document.getElementById('progressFill').style.width = pct + '%';
+        }
+
+        function validateScreen(screenNum) {
+            const activeScreen = document.getElementById('screen' + screenNum);
+            const inputs = activeScreen.querySelectorAll('input[required], select[required], textarea[required]');
+            
+            for (let input of inputs) {
+                if (input.offsetParent === null) continue;
+
+                if (input.type === 'file') {
+                    if (!imagensComprimidas[input.id]) {
+                        const labelText = input.closest('.form-group').querySelector('label').innerText.replace('*', '').trim();
+                        alert('Por favor, anexe a foto obrigatória: ' + labelText);
+                        return false;
+                    }
+                } else if (!input.value.trim()) {
+                    const labelText = input.closest('.form-group').querySelector('label').innerText.replace('*', '').trim();
+                    alert('Por favor, preencha o campo obrigatório: ' + labelText);
+                    input.focus();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function nextScreen(num) {
+            if (validateScreen(currentScreen)) {
+                document.getElementById('screen' + currentScreen).classList.remove('active');
+                currentScreen = num;
+                document.getElementById('screen' + currentScreen).classList.add('active');
+                updateProgress();
+                window.scrollTo(0,0);
+            }
+        }
+
+        function prevScreen(num) {
+            document.getElementById('screen' + currentScreen).classList.remove('active');
+            currentScreen = num;
+            document.getElementById('screen' + currentScreen).classList.add('active');
+            updateProgress();
+            window.scrollTo(0,0);
+        }
+
+        function generatePDF() {
+            document.getElementById('loadingSpinner').style.display = 'flex';
+
+            setTimeout(() => {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const resp = document.getElementById('responsavel').value;
+                const dataRaw = document.getElementById('data').value.split('-');
+                const dataFormatada = `${dataRaw[2]}/${dataRaw[1]}/${dataRaw[0]}`;
+                const tagEquip = document.getElementById('tag').value;
+                const numOs = document.getElementById('os').value;
+                const isTrifasico = document.getElementsByName('tipoEquipamento')[1].checked;
+                const obsText = document.getElementById('observacoes').value.trim();
+                const statusSelecionado = document.querySelector('input[name="statusFinal"]:checked').value;
+
+                let totalFiguras = 1;
+
+                function desenharCabecalho(doc) {
+                    doc.setDrawColor(0, 118, 223);
+                    doc.setLineWidth(1);
+                    doc.line(15, 22, 195, 22);
+                    
+                    doc.setFont('Helvetica', 'normal');
+                    doc.setFontSize(14);
+                    doc.setTextColor('#0076df');
+                    doc.text('grupo', 15, 17);
+                    doc.setFont('Helvetica', 'bold');
+                    doc.text('Multilaser', 29, 17);
+
+                    doc.setFont('Helvetica', 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor('#666666');
+                    doc.text('RELATÓRIO DE MANUTENÇÃO PREVENTIVA', 130, 17);
+                }
+
+                function desenharRodape(doc, paginaAtual, totalPaginas) {
+                    doc.setFont('Helvetica', 'normal');
+                    doc.setFontSize(8);
+                    doc.setTextColor('#999999');
+                    doc.text(`Página ${paginaAtual} de ${totalPaginas}`, 180, 285);
+                }
+
+                pdf.setFont('Helvetica', 'normal');
+                pdf.setFontSize(36);
+                pdf.setTextColor('#0076df');
+                pdf.text('grupo', 45, 45);
+                pdf.setFont('Helvetica', 'bold');
+                pdf.text('Multilaser', 80, 45);
+
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setFontSize(15);
+                pdf.text('RELATÓRIO DE MANUTENÇÃO PREVENTIVA', 45, 75);
+
+                pdf.setDrawColor(220, 220, 220);
+                pdf.setFillColor(245, 245, 245);
+                pdf.rect(15, 95, 180, 45, 'F');
+                
+                pdf.setFontSize(11);
+                pdf.setTextColor('#1a1a1a');
+                pdf.text(`RESPONSÁVEL:`, 20, 107);
+                pdf.text(`DATA:`, 20, 116);
+                pdf.text(`TAG:`, 20, 125);
+                pdf.text(`ORDEM:`, 20, 134);
+
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setTextColor('#0076df');
+                pdf.text(resp, 58, 107);
+                pdf.text(dataFormatada, 36, 116);
+                pdf.text(tagEquip, 33, 125);
+                pdf.text(numOs, 41, 134);
+
+                if(imagensComprimidas['img_equip']){
+                    pdf.addImage(imagensComprimidas['img_equip'], 'JPEG', 35, 155, 140, 95);
+                    pdf.setFont('Helvetica', 'italic');
+                    pdf.setFontSize(10);
+                    pdf.setTextColor('#444444');
+                    pdf.text(`Figura 01 – Equipamento`, 87, 258);
+                    totalFiguras++;
+                }
+
+                pdf.addPage();
+                desenharCabecalho(pdf);
+                
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setFontSize(16);
+                pdf.setTextColor('#1a1a1a');
+                pdf.text('Sumário', 15, 40);
+
+                const itensSumario = [
+                    ["1. Evaporadora", "3"],
+                    ["2. Filtros de Ar", "3"],
+                    ["3. Condensadora", "4"],
+                    ["4. Verificação de Corrente Elétrica", "5"],
+                    ["5. Verificação de Tensão Elétrica", "5"],
+                    ["6. Observações Adicionais", "6"],
+                    ["7. Status Operacional Final", "7"]
+                ];
+
+                let ySumario = 55;
+                itensSumario.forEach((item) => {
+                    pdf.setFont('Helvetica', 'normal');
+                    pdf.setFontSize(11);
+                    pdf.setTextColor('#1a1a1a');
+                    pdf.text(item[0], 15, ySumario);
+                    pdf.setFontSize(10);
+                    pdf.setTextColor('#aaaaaa');
+                    pdf.text('. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .', 75, ySumario);
+                    pdf.setFont('Helvetica', 'bold');
+                    pdf.setTextColor('#1a1a1a');
+                    pdf.text(item[1], 190, ySumario);
+                    ySumario += 12;
+                });
+
+                pdf.addPage();
+                desenharCabecalho(pdf);
+                
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setFontSize(14);
+                pdf.setTextColor('#0076df');
+                pdf.text('1. Evaporador', 15, 38);
+
+                pdf.setFont('Helvetica', 'normal');
+                pdf.setFontSize(10);
+                pdf.setTextColor('#1a1a1a');
+                pdf.text('Foi realizada limpeza química da serpentina do evaporador para remoção de impurezas e melhoria da circulação de ar.', 15, 44, {maxWidth: 180});
+
+                if(imagensComprimidas['img_evap_antes']) pdf.addImage(imagensComprimidas['img_evap_antes'], 'JPEG', 15, 54, 85, 58);
+                if(imagensComprimidas['img_evap_depois']) pdf.addImage(imagensComprimidas['img_evap_depois'], 'JPEG', 110, 54, 85, 58);
+                
+                pdf.setFont('Helvetica', 'italic');
+                pdf.setFontSize(9);
+                pdf.text(`Figura 0${totalFiguras++} – Evaporador Antes da Limpeza`, 15, 116);
+                pdf.text(`Figura 0${totalFiguras++} – Evaporador Após Limpeza`, 110, 116);
+
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setFontSize(14);
+                pdf.setTextColor('#0076df');
+                pdf.text('2. Filtro', 15, 135);
+
+                pdf.setFont('Helvetica', 'normal');
+                pdf.setFontSize(10);
+                pdf.setTextColor('#1a1a1a');
+                pdf.text('Foi realizada limpeza dos filtros de ar para garantir o correto rendimento do equipamento.', 15, 141);
+
+                if(imagensComprimidas['img_filtro_antes']) pdf.addImage(imagensComprimidas['img_filtro_antes'], 'JPEG', 15, 149, 85, 58);
+                if(imagensComprimidas['img_filtro_depois']) pdf.addImage(imagensComprimidas['img_filtro_depois'], 'JPEG', 110, 149, 85, 58);
+
+                pdf.setFont('Helvetica', 'italic');
+                pdf.setFontSize(9);
+                pdf.text(`Figura 0${totalFiguras++} – Filtro Antes da Limpeza`, 15, 211);
+                pdf.text(`Figura 0${totalFiguras++} – Filtro Após Limpeza`, 110, 211);
+
+                pdf.addPage();
+                desenharCabecalho(pdf);
+
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setFontSize(14);
+                pdf.setTextColor('#0076df');
+                pdf.text('3. Condensador', 15, 38);
+
+                pdf.setFont('Helvetica', 'normal');
+                pdf.setFontSize(10);
+                pdf.setTextColor('#1a1a1a');
+                pdf.text('Foi realizada inspeção e limpeza do condensador, removendo resíduos que poderiam comprometer a troca térmica do equipamento.', 15, 44, {maxWidth: 180});
+
+                if(imagensComprimidas['img_cond_antes']) pdf.addImage(imagensComprimidas['img_cond_antes'], 'JPEG', 15, 56, 180, 95);
+                pdf.text(`Figura 0${totalFiguras++} – Condensador Antes da Limpeza`, 15, 155);
+
+                if(imagensComprimidas['img_cond_depois']) pdf.addImage(imagensComprimidas['img_cond_depois'], 'JPEG', 15, 168, 180, 95);
+                pdf.text(`Figura 0${totalFiguras++} – Condensador Após Limpeza`, 15, 267);
+
+                pdf.addPage();
+                desenharCabecalho(pdf);
+
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setFontSize(14);
+                pdf.setTextColor('#0076df');
+                pdf.text('4. Verificações Elétricas - Corrente', 15, 38);
+
+                if(!isTrifasico) {
+                    if(imagensComprimidas['img_corr_m']) pdf.addImage(imagensComprimidas['img_corr_m'], 'JPEG', 15, 46, 85, 65);
+                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(9);
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Medição de Corrente`, 15, 115);
+                    totalFiguras++;
+                } else {
+                    if(imagensComprimidas['img_corr_r']) pdf.addImage(imagensComprimidas['img_corr_r'], 'JPEG', 15, 46, 55, 65);
+                    if(imagensComprimidas['img_corr_s']) pdf.addImage(imagensComprimidas['img_corr_s'], 'JPEG', 77, 46, 55, 65);
+                    if(imagensComprimidas['img_corr_t']) pdf.addImage(imagensComprimidas['img_corr_t'], 'JPEG', 140, 46, 55, 65);
+                    
+                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(8);
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Corrente Fase R`, 15, 115); totalFiguras++;
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Corrente Fase S`, 77, 115); totalFiguras++;
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Corrente Fase T`, 140, 115); totalFiguras++;
+                }
+
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setFontSize(14);
+                pdf.setTextColor('#0076df');
+                pdf.text('5. Verificações Elétricas - Tensão', 15, 135);
+
+                if(!isTrifasico) {
+                    if(imagensComprimidas['img_tens_m']) pdf.addImage(imagensComprimidas['img_tens_m'], 'JPEG', 15, 143, 85, 65);
+                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(9);
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Medição de Tensão`, 15, 212);
+                    totalFiguras++;
+                } else {
+                    if(imagensComprimidas['img_tens_r']) pdf.addImage(imagensComprimidas['img_tens_r'], 'JPEG', 15, 143, 55, 65);
+                    if(imagensComprimidas['img_tens_s']) pdf.addImage(imagensComprimidas['img_tens_s'], 'JPEG', 77, 143, 55, 65);
+                    if(imagensComprimidas['img_tens_t']) pdf.addImage(imagensComprimidas['img_tens_t'], 'JPEG', 140, 143, 55, 65);
+                    
+                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(8);
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Tensão Fase R`, 15, 212); totalFiguras++;
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Tensão Fase S`, 77, 212); totalFiguras++;
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Tensão Fase T`, 140, 212); totalFiguras++;
+                }
+
+                pdf.addPage();
+                desenharCabecalho(pdf);
+
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setFontSize(14);
+                pdf.setTextColor('#0076df');
+                pdf.text('6. Observações Complementares', 15, 38);
+
+                pdf.setFont('Helvetica', 'normal');
+                pdf.setFontSize(11);
+                pdf.setTextColor('#1a1a1a');
+                
+                if(obsText === "") {
+                    pdf.text('Nenhuma observação registrada.', 15, 48);
+                } else {
+                    pdf.text(obsText, 15, 48, {maxWidth: 180});
+                }
+
+                pdf.addPage();
+                desenharCabecalho(pdf);
+
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setFontSize(14);
+                pdf.setTextColor('#0076df');
+                pdf.text('7. Status Operacional do Equipamento', 15, 38);
+
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setFontSize(12);
+
+                let textoStatus = "";
+                if(statusSelecionado === 'liberado'){
+                    pdf.setTextColor('#2e7d32');
+                    pdf.text('STATUS: LIBERADO PARA USO', 15, 50);
+                    textoStatus = "Após a realização da manutenção preventiva e das verificações operacionais, o equipamento encontra-se em condições normais de funcionamento, estando liberado para uso técnico e corporativo.";
+                } else if(statusSelecionado === 'ressalvas') {
+                    pdf.setTextColor('#ef6c00');
+                    pdf.text('STATUS: LIBERADO COM RESSALVAS', 15, 50);
+                    textoStatus = "Após a realização da manutenção preventiva, o equipamento encontra-se operacional, porém com observações de atenção registradas neste relatório.";
+                } else {
+                    pdf.setTextColor('#c62828');
+                    pdf.text('STATUS: NECESSITA MANUTENÇÃO CORRETIVA', 15, 50);
+                    textoStatus = "Após a realização da manutenção preventiva, foram identificadas não conformidades críticas de engenharia que requerem intervenção e manutenção corretiva complementar imediata.";
+                }
+
+                pdf.setFont('Helvetica', 'normal');
+                pdf.setFontSize(11);
+                pdf.setTextColor('#1a1a1a');
+                pdf.text(textoStatus, 15, 60, {maxWidth: 180});
+
+                pdf.line(15, 120, 95, 120);
+                pdf.setFontSize(9);
+                pdf.text('Responsável Técnico HVAC', 15, 125);
+                pdf.setFont('Helvetica', 'bold');
+                pdf.text(resp, 15, 117);
+
+                const totalPaginas = pdf.internal.getNumberOfPages();
+                for(let i = 1; i <= totalPaginas; i++) {
+                    pdf.setPage(i);
+                    desenharRodape(pdf, i, totalPaginas);
+                }
+
+                pdf.save(`Preventiva_HVAC_${tagEquip}_OS_${numOs}.pdf`);
+                
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }, 800);
+        }
+    </script>
+</body>
+</html>
