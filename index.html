@@ -107,26 +107,11 @@
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background-color 0.2s;
         }
 
         .login-form button:hover {
-            background-color: #005cbd;
-        }
-
-        .login-form button:active {
-            transform: scale(0.98);
-        }
-
-        .login-error {
-            color: var(--danger-color);
-            font-size: 0.85rem;
-            margin-top: 10px;
-            display: none;
-        }
-
-        .login-error.show {
-            display: block;
+            background-color: #0056b3;
         }
 
         .remember-login {
@@ -134,144 +119,169 @@
             align-items: center;
             gap: 8px;
             font-size: 0.9rem;
-            margin-top: 10px;
+            cursor: pointer;
         }
 
         .remember-login input {
-            width: 18px;
-            height: 18px;
             cursor: pointer;
+            width: auto;
+            margin: 0;
+        }
+
+        #loginError {
+            color: var(--danger-color);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: none;
         }
 
         /* APP CONTAINER */
         .app-container {
             display: none;
             width: 100%;
-            max-width: 600px;
+            max-width: 800px;
             background: var(--card-bg);
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             overflow: hidden;
-            flex-direction: column;
-            min-height: 85vh;
         }
 
         .app-container.active {
-            display: flex;
+            display: block;
         }
 
         .header {
-            background-color: #ffffff;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #005ab3 100%);
+            color: white;
             padding: 20px;
-            text-align: center;
-            border-bottom: 2px solid var(--bg-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             position: relative;
         }
 
-        .logout-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: #f0f0f0;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: #666;
-            transition: background 0.2s;
-        }
-
-        .logout-btn:hover {
-            background-color: #e0e0e0;
+        .logo-svg {
+            width: 150px;
+            height: auto;
         }
 
         .offline-indicator {
             position: absolute;
             top: 10px;
-            left: 10px;
-            font-size: 12px;
+            left: 20px;
+            font-size: 0.75rem;
+            background: var(--warning-color);
+            color: white;
             padding: 4px 8px;
             border-radius: 4px;
-            background-color: #4caf50;
-            color: white;
             display: none;
         }
 
-        .offline-indicator.offline {
-            background-color: #f44336;
-            display: block;
+        .offline-indicator.show {
+            display: inline-block;
         }
 
-        .logo-svg {
-            width: 220px;
-            height: auto;
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
         }
 
         .progress-bar {
-            height: 6px;
-            background-color: #e0e0e0;
-            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            position: relative;
+            overflow: hidden;
         }
 
         .progress-fill {
             height: 100%;
-            background-color: var(--primary-color);
-            width: 9%;
-            transition: width 0.3s ease;
+            background: var(--success-color);
+            width: 11%;
+            transition: width 0.3s;
+        }
+
+        .form-container {
+            padding: 30px;
         }
 
         .screen {
             display: none;
-            padding: 25px;
-            flex-grow: 1;
-            flex-direction: column;
-            overflow-y: auto;
+            animation: fadeIn 0.3s;
         }
 
         .screen.active {
-            display: flex;
+            display: block;
         }
 
-        h2 {
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            color: #333;
-            font-weight: 600;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .screen h2 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+        }
+
+        .screen h3 {
+            color: var(--primary-color);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
         }
 
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 25px;
         }
 
-        label {
+        .form-group label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
             font-weight: 600;
-            font-size: 0.9rem;
-            color: #444;
+            color: var(--text-color);
         }
 
-        input[type="text"], input[type="date"], textarea, select {
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 12px;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             border-radius: 6px;
             font-size: 1rem;
+            font-family: inherit;
             outline: none;
-            background-color: #fafafa;
+            transition: border-color 0.2s;
         }
 
-        input:focus, textarea:focus, select:focus {
+        .form-group input[type="text"]:focus,
+        .form-group input[type="date"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
             border-color: var(--primary-color);
-            background-color: #fff;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
         }
 
         .radio-group {
             display: flex;
-            gap: 15px;
-            margin-top: 5px;
+            gap: 20px;
+            margin-top: 10px;
         }
 
         .radio-label {
@@ -282,15 +292,22 @@
             font-weight: normal;
         }
 
+        .radio-label input {
+            cursor: pointer;
+            width: auto;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
         .camera-container {
             border: 2px dashed var(--border-color);
             border-radius: 8px;
-            padding: 30px 15px;
+            padding: 30px;
             text-align: center;
             cursor: pointer;
-            position: relative;
+            transition: all 0.3s;
             background: #fafafa;
-            transition: all 0.2s;
         }
 
         .camera-container:hover {
@@ -300,120 +317,184 @@
 
         .camera-container.has-image {
             border-color: var(--success-color);
-            background: #f1f8e9;
+            background: #f1f8f4;
         }
 
         .camera-icon {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .camera-container span {
+            display: block;
+            color: #666;
+            font-size: 0.95rem;
         }
 
         .image-preview {
+            max-width: 100%;
+            max-height: 200px;
             margin-top: 15px;
-            width: 100%;
-            max-height: 250px;
-            object-fit: contain;
             border-radius: 6px;
             display: none;
-            border: 1px solid #ddd;
+        }
+
+        .image-preview[src] {
+            display: block;
         }
 
         .btn-container {
-            margin-top: auto;
-            padding: 20px 0 0 0;
             display: flex;
-            gap: 12px;
+            gap: 15px;
+            margin-top: 40px;
+            justify-content: center;
         }
 
-        button {
-            flex: 1;
-            padding: 14px;
+        .btn-prev,
+        .btn-next,
+        .btn-generate {
+            padding: 12px 30px;
             border: none;
             border-radius: 6px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+
+        .btn-prev {
+            background: #e0e0e0;
+            color: var(--text-color);
+        }
+
+        .btn-prev:hover {
+            background: #d0d0d0;
         }
 
         .btn-next {
-            background-color: var(--primary-color);
+            background: var(--primary-color);
             color: white;
         }
 
-        .btn-next:hover { background-color: #005cbd; }
-
-        .btn-prev {
-            background-color: #e0e0e0;
-            color: #333;
+        .btn-next:hover {
+            background: #0056b3;
         }
-
-        .btn-prev:hover { background-color: #d2d2d2; }
 
         .btn-generate {
-            background-color: var(--success-color);
+            background: var(--success-color);
             color: white;
+            min-width: 200px;
         }
-        .btn-generate:hover { background-color: #235e26; }
+
+        .btn-generate:hover {
+            background: #1e5a23;
+        }
 
         .status-option {
             border: 2px solid var(--border-color);
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-weight: 600;
+            gap: 15px;
+            transition: all 0.3s;
         }
 
-        .status-option input {
-            width: 18px;
-            height: 18px;
+        .status-option:hover {
+            border-color: var(--primary-color);
+            background: #f0f7ff;
         }
-
-        .status-liberado { border-left: 6px solid var(--success-color); }
-        .status-ressalvas { border-left: 6px solid var(--warning-color); }
-        .status-corretiva { border-left: 6px solid var(--danger-color); }
 
         .status-option.selected {
-            background-color: #f1f8e9;
-            border-color: var(--success-color);
-        }
-        .status-option.selected.status-ressalvas {
-            background-color: #fff3e0;
-            border-color: var(--warning-color);
-        }
-        .status-option.selected.status-corretiva {
-            background-color: #ffebee;
-            border-color: var(--danger-color);
+            border-color: var(--primary-color);
+            background: #f0f7ff;
         }
 
-        /* Loading Spinner */
-        .spinner {
+        .status-liberado.selected {
+            border-color: var(--success-color);
+            background: #f1f8f4;
+        }
+
+        .status-ressalvas.selected {
+            border-color: var(--warning-color);
+            background: #fff8f0;
+        }
+
+        .status-corretiva.selected {
+            border-color: var(--danger-color);
+            background: #fef1f1;
+        }
+
+        .status-option input[type="radio"] {
+            cursor: pointer;
+            width: auto;
+            margin: 0;
+            padding: 0;
+            border: none;
+        }
+
+        .loading-spinner {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.8);
-            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            gap: 15px;
-            font-weight: bold;
-            color: var(--primary-color);
+            z-index: 3000;
         }
-        .loader {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
+
+        .loading-spinner.show {
+            display: flex;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
             border-radius: 50%;
             width: 50px;
             height: 50px;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .app-container {
+                border-radius: 0;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .screen h2 {
+                font-size: 1.3rem;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .btn-prev,
+            .btn-next,
+            .btn-generate {
+                min-width: 100%;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -429,14 +510,9 @@
                 <input type="checkbox" id="rememberLogin">
                 Lembrar neste aparelho
             </label>
+            <div id="loginError"></div>
             <button type="submit">Entrar</button>
-            <div class="login-error" id="loginError">Senha incorreta. Tente novamente.</div>
         </form>
-    </div>
-
-    <div class="spinner" id="loadingSpinner">
-        <div class="loader"></div>
-        <div>Comprimindo e Otimizando Relatório...</div>
     </div>
 
     <div class="app-container" id="appContainer">
@@ -444,8 +520,8 @@
             <div class="offline-indicator" id="offlineIndicator">Offline</div>
             <button class="logout-btn" onclick="handleLogout()">Sair</button>
             <svg class="logo-svg" viewBox="0 0 450 100" xmlns="http://www.w3.org/2000/svg">
-                <text x="20" y="65" font-family="'Segoe UI', Arial, sans-serif" font-size="44" fill="#0076df" font-weight="300">grupo</text>
-                <text x="135" y="65" font-family="'Segoe UI', Arial, sans-serif" font-size="44" fill="#0076df" font-weight="700">Multilaser</text>
+                <text x="20" y="65" font-family="'Segoe UI', Arial, sans-serif" font-size="44" fill="#ffffff" font-weight="300">grupo</text>
+                <text x="135" y="65" font-family="'Segoe UI', Arial, sans-serif" font-size="44" fill="#ffffff" font-weight="700">Multilaser</text>
             </svg>
         </div>
         
@@ -453,288 +529,303 @@
             <div class="progress-fill" id="progressFill"></div>
         </div>
 
-        <form id="reportForm" onsubmit="return false;">
-            
-            <div class="screen active" id="screen1">
-                <h2>Identificação Inicial</h2>
-                <div class="form-group">
-                    <label>Responsável Técnico *</label>
-                    <input type="text" id="responsavel" required placeholder="Nome completo">
-                </div>
-                <div class="form-group">
-                    <label>Data da Preventiva *</label>
-                    <input type="date" id="data" required>
-                </div>
-                <div class="form-group">
-                    <label>TAG do Equipamento *</label>
-                    <input type="text" id="tag" required placeholder="Ex: NOT-003">
-                </div>
-                <div class="form-group">
-                    <label>Número da Ordem de Serviço *</label>
-                    <input type="text" id="os" required placeholder="Ex: 400050855">
-                </div>
-                <div class="form-group">
-                    <label>Tipo de Alimentação Elétrica</label>
-                    <div class="radio-group">
-                        <label class="radio-label"><input type="radio" name="tipoEquipamento" value="monofasico" checked onchange="toggleFases()"> Monofásico</label>
-                        <label class="radio-label"><input type="radio" name="tipoEquipamento" value="trifasico" onchange="toggleFases()"> Trifásico</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Foto Geral do Equipamento *</label>
-                    <div class="camera-container" onclick="triggerInput('img_equip')">
-                        <div class="camera-icon">📷</div>
-                        <span>Capturar ou Selecionar Foto</span>
-                        <input type="file" id="img_equip" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                        <img class="image-preview" id="prev_img_equip">
-                    </div>
-                </div>
-                <div class="btn-container">
-                    <button type="button" class="btn-next" onclick="nextScreen(2)">Próximo</button>
-                </div>
-            </div>
-
-            <div class="screen" id="screen2">
-                <h2>Evaporador Antes da Limpeza</h2>
-                <div class="form-group">
-                    <label>Foto Obrigatória *</label>
-                    <div class="camera-container" onclick="triggerInput('img_evap_antes')">
-                        <div class="camera-icon">📷</div>
-                        <span>Capturar ou Selecionar Foto</span>
-                        <input type="file" id="img_evap_antes" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                        <img class="image-preview" id="prev_img_evap_antes">
-                    </div>
-                </div>
-                <div class="btn-container">
-                    <button type="button" class="btn-prev" onclick="prevScreen(1)">Voltar</button>
-                    <button type="button" class="btn-next" onclick="nextScreen(3)">Próximo</button>
-                </div>
-            </div>
-
-            <div class="screen" id="screen3">
-                <h2>Evaporador Após Limpeza</h2>
-                <div class="form-group">
-                    <label>Foto Obrigatória *</label>
-                    <div class="camera-container" onclick="triggerInput('img_evap_depois')">
-                        <div class="camera-icon">📷</div>
-                        <span>Capturar ou Selecionar Foto</span>
-                        <input type="file" id="img_evap_depois" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                        <img class="image-preview" id="prev_img_evap_depois">
-                    </div>
-                </div>
-                <div class="btn-container">
-                    <button type="button" class="btn-prev" onclick="prevScreen(2)">Voltar</button>
-                    <button type="button" class="btn-next" onclick="nextScreen(4)">Próximo</button>
-                </div>
-            </div>
-
-            <div class="screen" id="screen4">
-                <h2>Filtro Antes da Limpeza</h2>
-                <div class="form-group">
-                    <label>Foto Obrigatória *</label>
-                    <div class="camera-container" onclick="triggerInput('img_filtro_antes')">
-                        <div class="camera-icon">📷</div>
-                        <span>Capturar ou Selecionar Foto</span>
-                        <input type="file" id="img_filtro_antes" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                        <img class="image-preview" id="prev_img_filtro_antes">
-                    </div>
-                </div>
-                <div class="btn-container">
-                    <button type="button" class="btn-prev" onclick="prevScreen(3)">Voltar</button>
-                    <button type="button" class="btn-next" onclick="nextScreen(5)">Próximo</button>
-                </div>
-            </div>
-
-            <div class="screen" id="screen5">
-                <h2>Filtro Após Limpeza</h2>
-                <div class="form-group">
-                    <label>Foto Obrigatória *</label>
-                    <div class="camera-container" onclick="triggerInput('img_filtro_depois')">
-                        <div class="camera-icon">📷</div>
-                        <span>Capturar ou Selecionar Foto</span>
-                        <input type="file" id="img_filtro_depois" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                        <img class="image-preview" id="prev_img_filtro_depois">
-                    </div>
-                </div>
-                <div class="btn-container">
-                    <button type="button" class="btn-prev" onclick="prevScreen(4)">Voltar</button>
-                    <button type="button" class="btn-next" onclick="nextScreen(6)">Próximo</button>
-                </div>
-            </div>
-
-            <div class="screen" id="screen6">
-                <h2>Condensador Antes da Limpeza</h2>
-                <div class="form-group">
-                    <label>Foto Obrigatória *</label>
-                    <div class="camera-container" onclick="triggerInput('img_cond_antes')">
-                        <div class="camera-icon">📷</div>
-                        <span>Capturar ou Selecionar Foto</span>
-                        <input type="file" id="img_cond_antes" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                        <img class="image-preview" id="prev_img_cond_antes">
-                    </div>
-                </div>
-                <div class="btn-container">
-                    <button type="button" class="btn-prev" onclick="prevScreen(5)">Voltar</button>
-                    <button type="button" class="btn-next" onclick="nextScreen(7)">Próximo</button>
-                </div>
-            </div>
-
-            <div class="screen" id="screen7">
-                <h2>Condensador Após Limpeza</h2>
-                <div class="form-group">
-                    <label>Foto Obrigatória *</label>
-                    <div class="camera-container" onclick="triggerInput('img_cond_depois')">
-                        <div class="camera-icon">📷</div>
-                        <span>Capturar ou Selecionar Foto</span>
-                        <input type="file" id="img_cond_depois" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                        <img class="image-preview" id="prev_img_cond_depois">
-                    </div>
-                </div>
-                <div class="btn-container">
-                    <button type="button" class="btn-prev" onclick="prevScreen(6)">Voltar</button>
-                    <button type="button" class="btn-next" onclick="nextScreen(8)">Próximo</button>
-                </div>
-            </div>
-
-            <div class="screen" id="screen8">
-                <h2>Medição de Corrente Elétrica</h2>
+        <div class="form-container">
+            <form id="reportForm" onsubmit="return false;">
                 
-                <div id="wrapper_corr_mono">
+                <div class="screen active" id="screen1">
+                    <h2>Identificação Inicial</h2>
                     <div class="form-group">
-                        <label>Foto da Medição de Corrente *</label>
-                        <div class="camera-container" onclick="triggerInput('img_corr_m')">
+                        <label>Responsável Técnico *</label>
+                        <input type="text" id="responsavel" required placeholder="Nome completo">
+                    </div>
+                    <div class="form-group">
+                        <label>Data da Preventiva *</label>
+                        <input type="date" id="data" required>
+                    </div>
+                    <div class="form-group">
+                        <label>TAG do Equipamento *</label>
+                        <input type="text" id="tag" required placeholder="Ex: NOT-003">
+                    </div>
+                    <div class="form-group">
+                        <label>Número da Ordem de Serviço *</label>
+                        <input type="text" id="os" required placeholder="Ex: 400050855">
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo de Alimentação Elétrica</label>
+                        <div class="radio-group">
+                            <label class="radio-label"><input type="radio" name="tipoEquipamento" value="monofasico" checked onchange="toggleFases()"> Monofásico</label>
+                            <label class="radio-label"><input type="radio" name="tipoEquipamento" value="trifasico" onchange="toggleFases()"> Trifásico</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Foto Geral do Equipamento *</label>
+                        <div class="camera-container" onclick="triggerInput('img_equip')">
                             <div class="camera-icon">📷</div>
                             <span>Capturar ou Selecionar Foto</span>
-                            <input type="file" id="img_corr_m" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                            <img class="image-preview" id="prev_img_corr_m">
+                            <input type="file" id="img_equip" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_equip">
                         </div>
+                    </div>
+                    <div class="btn-container">
+                        <button type="button" class="btn-next" onclick="nextScreen(2)">Próximo</button>
                     </div>
                 </div>
 
-                <div id="wrapper_corr_tri" style="display:none;">
+                <div class="screen" id="screen2">
+                    <h2>Evaporador Antes da Limpeza</h2>
                     <div class="form-group">
-                        <label>Foto Fase R *</label>
-                        <div class="camera-container" onclick="triggerInput('img_corr_r')">
-                            <div class="camera-icon">📷</div>
-                            <span>Fase R</span>
-                            <input type="file" id="img_corr_r" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                            <img class="image-preview" id="prev_img_corr_r">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Foto Fase S *</label>
-                        <div class="camera-container" onclick="triggerInput('img_corr_s')">
-                            <div class="camera-icon">📷</div>
-                            <span>Fase S</span>
-                            <input type="file" id="img_corr_s" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                            <img class="image-preview" id="prev_img_corr_s">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Foto Fase T *</label>
-                        <div class="camera-container" onclick="triggerInput('img_corr_t')">
-                            <div class="camera-icon">📷</div>
-                            <span>Fase T</span>
-                            <input type="file" id="img_corr_t" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                            <img class="image-preview" id="prev_img_corr_t">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="btn-container">
-                    <button type="button" class="btn-prev" onclick="prevScreen(7)">Voltar</button>
-                    <button type="button" class="btn-next" onclick="nextScreen(9)">Próximo</button>
-                </div>
-            </div>
-
-            <div class="screen" id="screen9">
-                <h2>Medição de Tensão Elétrica</h2>
-                
-                <div id="wrapper_tens_mono">
-                    <div class="form-group">
-                        <label>Foto da Medição de Tensão *</label>
-                        <div class="camera-container" onclick="triggerInput('img_tens_m')">
+                        <label>Foto Obrigatória *</label>
+                        <div class="camera-container" onclick="triggerInput('img_evap_antes')">
                             <div class="camera-icon">📷</div>
                             <span>Capturar ou Selecionar Foto</span>
-                            <input type="file" id="img_tens_m" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                            <img class="image-preview" id="prev_img_tens_m">
+                            <input type="file" id="img_evap_antes" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_evap_antes">
                         </div>
+                    </div>
+                    <div class="btn-container">
+                        <button type="button" class="btn-prev" onclick="prevScreen(1)">Voltar</button>
+                        <button type="button" class="btn-next" onclick="nextScreen(3)">Próximo</button>
                     </div>
                 </div>
 
-                <div id="wrapper_tens_tri" style="display:none;">
+                <div class="screen" id="screen3">
+                    <h2>Evaporador Após Limpeza</h2>
                     <div class="form-group">
-                        <label>Foto Fase R *</label>
-                        <div class="camera-container" onclick="triggerInput('img_tens_r')">
+                        <label>Foto Obrigatória *</label>
+                        <div class="camera-container" onclick="triggerInput('img_evap_depois')">
                             <div class="camera-icon">📷</div>
-                            <span>Fase R</span>
-                            <input type="file" id="img_tens_r" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                            <img class="image-preview" id="prev_img_tens_r">
+                            <span>Capturar ou Selecionar Foto</span>
+                            <input type="file" id="img_evap_depois" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_evap_depois">
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <button type="button" class="btn-prev" onclick="prevScreen(2)">Voltar</button>
+                        <button type="button" class="btn-next" onclick="nextScreen(4)">Próximo</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="screen4">
+                    <h2>Filtro Antes da Limpeza</h2>
+                    <div class="form-group">
+                        <label>Foto Obrigatória *</label>
+                        <div class="camera-container" onclick="triggerInput('img_filtro_antes')">
+                            <div class="camera-icon">📷</div>
+                            <span>Capturar ou Selecionar Foto</span>
+                            <input type="file" id="img_filtro_antes" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_filtro_antes">
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <button type="button" class="btn-prev" onclick="prevScreen(3)">Voltar</button>
+                        <button type="button" class="btn-next" onclick="nextScreen(5)">Próximo</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="screen5">
+                    <h2>Filtro Após Limpeza</h2>
+                    <div class="form-group">
+                        <label>Foto Obrigatória *</label>
+                        <div class="camera-container" onclick="triggerInput('img_filtro_depois')">
+                            <div class="camera-icon">📷</div>
+                            <span>Capturar ou Selecionar Foto</span>
+                            <input type="file" id="img_filtro_depois" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_filtro_depois">
+                        </div>
+                    </div>
+                    <div class="btn-container">
+                        <button type="button" class="btn-prev" onclick="prevScreen(4)">Voltar</button>
+                        <button type="button" class="btn-next" onclick="nextScreen(6)">Próximo</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="screen6">
+                    <h2>Condensador - Antes e Depois da Limpeza</h2>
+                    <div class="form-group">
+                        <label>Foto Antes da Limpeza *</label>
+                        <div class="camera-container" onclick="triggerInput('img_cond_antes')">
+                            <div class="camera-icon">📷</div>
+                            <span>Antes</span>
+                            <input type="file" id="img_cond_antes" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_cond_antes">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Foto Fase S *</label>
-                        <div class="camera-container" onclick="triggerInput('img_tens_s')">
+                        <label>Foto Após Limpeza *</label>
+                        <div class="camera-container" onclick="triggerInput('img_cond_depois')">
                             <div class="camera-icon">📷</div>
-                            <span>Fase S</span>
-                            <input type="file" id="img_tens_s" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                            <img class="image-preview" id="prev_img_tens_s">
+                            <span>Depois</span>
+                            <input type="file" id="img_cond_depois" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                            <img class="image-preview" id="prev_img_cond_depois">
                         </div>
+                    </div>
+
+                    <h3>Verificação de Corrente Elétrica</h3>
+                    
+                    <div id="wrapper_corr_mono">
+                        <div class="form-group">
+                            <label>Foto da Medição de Corrente *</label>
+                            <div class="camera-container" onclick="triggerInput('img_corr_m')">
+                                <div class="camera-icon">📷</div>
+                                <span>Capturar ou Selecionar Foto</span>
+                                <input type="file" id="img_corr_m" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                                <img class="image-preview" id="prev_img_corr_m">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="wrapper_corr_tri" style="display:none;">
+                        <div class="form-group">
+                            <label>Foto Fase R *</label>
+                            <div class="camera-container" onclick="triggerInput('img_corr_r')">
+                                <div class="camera-icon">📷</div>
+                                <span>Fase R</span>
+                                <input type="file" id="img_corr_r" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                                <img class="image-preview" id="prev_img_corr_r">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Foto Fase S *</label>
+                            <div class="camera-container" onclick="triggerInput('img_corr_s')">
+                                <div class="camera-icon">📷</div>
+                                <span>Fase S</span>
+                                <input type="file" id="img_corr_s" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                                <img class="image-preview" id="prev_img_corr_s">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Foto Fase T *</label>
+                            <div class="camera-container" onclick="triggerInput('img_corr_t')">
+                                <div class="camera-icon">📷</div>
+                                <span>Fase T</span>
+                                <input type="file" id="img_corr_t" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                                <img class="image-preview" id="prev_img_corr_t">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <button type="button" class="btn-prev" onclick="prevScreen(5)">Voltar</button>
+                        <button type="button" class="btn-next" onclick="nextScreen(7)">Próximo</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="screen7">
+                    <h2>Medição de Tensão Elétrica</h2>
+                    
+                    <div id="wrapper_tens_mono">
+                        <div class="form-group">
+                            <label>Foto da Medição de Tensão *</label>
+                            <div class="camera-container" onclick="triggerInput('img_tens_m')">
+                                <div class="camera-icon">📷</div>
+                                <span>Capturar ou Selecionar Foto</span>
+                                <input type="file" id="img_tens_m" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                                <img class="image-preview" id="prev_img_tens_m">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="wrapper_tens_tri" style="display:none;">
+                        <div class="form-group">
+                            <label>Foto Fase R *</label>
+                            <div class="camera-container" onclick="triggerInput('img_tens_r')">
+                                <div class="camera-icon">📷</div>
+                                <span>Fase R</span>
+                                <input type="file" id="img_tens_r" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                                <img class="image-preview" id="prev_img_tens_r">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Foto Fase S *</label>
+                            <div class="camera-container" onclick="triggerInput('img_tens_s')">
+                                <div class="camera-icon">📷</div>
+                                <span>Fase S</span>
+                                <input type="file" id="img_tens_s" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                                <img class="image-preview" id="prev_img_tens_s">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Foto Fase T *</label>
+                            <div class="camera-container" onclick="triggerInput('img_tens_t')">
+                                <div class="camera-icon">📷</div>
+                                <span>Fase T</span>
+                                <input type="file" id="img_tens_t" accept="image/*" style="display:none" onchange="handleFile(this)" required>
+                                <img class="image-preview" id="prev_img_tens_t">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <button type="button" class="btn-prev" onclick="prevScreen(6)">Voltar</button>
+                        <button type="button" class="btn-next" onclick="nextScreen(8)">Próximo</button>
+                    </div>
+                </div>
+
+                <div class="screen" id="screen8">
+                    <h2>Observações Complementares</h2>
+                    <div class="form-group">
+                        <label>Notas e Não Conformidades (Opcional)</label>
+                        <textarea id="observacoes" rows="4" placeholder="Ex: Equipamento apresentou ruído excessivo no ventilador do condensador. Recomenda-se manutenção corretiva complementar."></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Foto Fase T *</label>
-                        <div class="camera-container" onclick="triggerInput('img_tens_t')">
-                            <div class="camera-icon">📷</div>
-                            <span>Fase T</span>
-                            <input type="file" id="img_tens_t" accept="image/*" style="display:none" onchange="handleFile(this)" required>
-                            <img class="image-preview" id="prev_img_tens_t">
+                        <label>Fotos Adicionais (Opcional)</label>
+                        <div id="obs_photos_container" style="display: flex; flex-direction: column; gap: 10px;">
+                            <div class="camera-container" onclick="triggerInput('img_obs_1')">
+                                <div class="camera-icon">📷</div>
+                                <span>Foto Adicional 1</span>
+                                <input type="file" id="img_obs_1" accept="image/*" style="display:none" onchange="handleFile(this)">
+                                <img class="image-preview" id="prev_img_obs_1">
+                            </div>
+                            <div class="camera-container" onclick="triggerInput('img_obs_2')">
+                                <div class="camera-icon">📷</div>
+                                <span>Foto Adicional 2</span>
+                                <input type="file" id="img_obs_2" accept="image/*" style="display:none" onchange="handleFile(this)">
+                                <img class="image-preview" id="prev_img_obs_2">
+                            </div>
+                            <div class="camera-container" onclick="triggerInput('img_obs_3')">
+                                <div class="camera-icon">📷</div>
+                                <span>Foto Adicional 3</span>
+                                <input type="file" id="img_obs_3" accept="image/*" style="display:none" onchange="handleFile(this)">
+                                <img class="image-preview" id="prev_img_obs_3">
+                            </div>
                         </div>
+                    </div>
+                    <div class="btn-container">
+                        <button type="button" class="btn-prev" onclick="prevScreen(7)">Voltar</button>
+                        <button type="button" class="btn-next" onclick="nextScreen(9)">Próximo</button>
                     </div>
                 </div>
 
-                <div class="btn-container">
-                    <button type="button" class="btn-prev" onclick="prevScreen(8)">Voltar</button>
-                    <button type="button" class="btn-next" onclick="nextScreen(10)">Próximo</button>
-                </div>
-            </div>
+                <div class="screen" id="screen9">
+                    <h2>Status Operacional do Equipamento</h2>
+                    
+                    <div class="status-option status-liberado selected" onclick="selectStatus(this, 'liberado')">
+                        <input type="radio" name="statusFinal" value="liberado" checked style="pointer-events: none;">
+                        Liberado para uso
+                    </div>
 
-            <div class="screen" id="screen10">
-                <h2>Observações Complementares</h2>
-                <div class="form-group">
-                    <label>Notas e Não Conformidades (Opcional)</label>
-                    <textarea id="observacoes" rows="6" placeholder="Ex: Equipamento apresentou ruído excessivo no ventilador do condensador. Recomenda-se manutenção corretiva complementar."></textarea>
-                </div>
-                <div class="btn-container">
-                    <button type="button" class="btn-prev" onclick="prevScreen(9)">Voltar</button>
-                    <button type="button" class="btn-next" onclick="nextScreen(11)">Próximo</button>
-                </div>
-            </div>
+                    <div class="status-option status-ressalvas" onclick="selectStatus(this, 'ressalvas')">
+                        <input type="radio" name="statusFinal" value="ressalvas" style="pointer-events: none;">
+                        Liberado com ressalvas
+                    </div>
 
-            <div class="screen" id="screen11">
-                <h2>Status Operacional do Equipamento</h2>
-                
-                <div class="status-option status-liberado selected" onclick="selectStatus(this, 'liberado')">
-                    <input type="radio" name="statusFinal" value="liberado" checked style="pointer-events: none;">
-                    Liberado para uso
+                    <div class="status-option status-corretiva" onclick="selectStatus(this, 'corretiva')">
+                        <input type="radio" name="statusFinal" value="corretiva" style="pointer-events: none;">
+                        Necessita manutenção corretiva
+                    </div>
+
+                    <div class="btn-container">
+                        <button type="button" class="btn-prev" onclick="prevScreen(8)">Voltar</button>
+                        <button type="button" class="btn-generate" onclick="generatePDF()">GERAR RELATÓRIO PDF</button>
+                    </div>
                 </div>
 
-                <div class="status-option status-ressalvas" onclick="selectStatus(this, 'ressalvas')">
-                    <input type="radio" name="statusFinal" value="ressalvas" style="pointer-events: none;">
-                    Liberado com ressalvas
-                </div>
+            </form>
+        </div>
+    </div>
 
-                <div class="status-option status-corretiva" onclick="selectStatus(this, 'corretiva')">
-                    <input type="radio" name="statusFinal" value="corretiva" style="pointer-events: none;">
-                    Necessita manutenção corretiva
-                </div>
-
-                <div class="btn-container">
-                    <button type="button" class="btn-prev" onclick="prevScreen(10)">Voltar</button>
-                    <button type="button" class="btn-generate" onclick="generatePDF()">GERAR RELATÓRIO PDF</button>
-                </div>
-            </div>
-
-        </form>
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner"></div>
     </div>
 
     <script>
@@ -748,40 +839,29 @@
             const errorDiv = document.getElementById('loginError');
             
             if (password === CORRECT_PASSWORD) {
-                errorDiv.classList.remove('show');
-                
                 if (rememberCheckbox.checked) {
-                    localStorage.setItem('hvacAuth', 'true');
+                    localStorage.setItem('hvac_auth', 'true');
                 }
-                
                 document.getElementById('loginContainer').classList.remove('active');
                 document.getElementById('appContainer').classList.add('active');
-                initializeApp();
+                document.getElementById('data').valueAsDate = new Date();
             } else {
-                errorDiv.classList.add('show');
-                document.getElementById('loginPassword').value = '';
+                errorDiv.textContent = 'Senha incorreta!';
+                errorDiv.style.display = 'block';
             }
         }
 
         function handleLogout() {
-            if (confirm('Tem certeza que deseja sair?')) {
-                localStorage.removeItem('hvacAuth');
-                document.getElementById('loginContainer').classList.add('active');
-                document.getElementById('appContainer').classList.remove('active');
-                document.getElementById('loginPassword').value = '';
-                document.getElementById('rememberLogin').checked = false;
-                imagensComprimidas = {};
-                currentScreen = 1;
-                updateProgress();
-            }
+            localStorage.removeItem('hvac_auth');
+            location.reload();
         }
 
-        // Verificar se usuário já está autenticado
-        window.addEventListener('load', function() {
-            if (localStorage.getItem('hvacAuth') === 'true') {
+        // Verificar se já está autenticado
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('hvac_auth') === 'true') {
                 document.getElementById('loginContainer').classList.remove('active');
                 document.getElementById('appContainer').classList.add('active');
-                initializeApp();
+                document.getElementById('data').valueAsDate = new Date();
             }
         });
 
@@ -802,34 +882,26 @@
         function updateOnlineStatus() {
             const indicator = document.getElementById('offlineIndicator');
             if (navigator.onLine) {
-                indicator.classList.remove('offline');
-                indicator.textContent = 'Online';
+                indicator.classList.remove('show');
             } else {
-                indicator.classList.add('offline');
-                indicator.textContent = 'Offline';
+                indicator.classList.add('show');
             }
         }
 
         window.addEventListener('online', updateOnlineStatus);
         window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
 
-        // Objeto global que guardará as imagens comprimidas em Base64
-        let imagensComprimidas = {};
         let currentScreen = 1;
-        const totalScreens = 11;
+        const totalScreens = 9;
+        let imagensComprimidas = {};
 
-        function initializeApp() {
-            updateOnlineStatus();
-            document.getElementById('data').valueAsDate = new Date();
-        }
-
-        function triggerInput(id) {
-            document.getElementById(id).click();
+        function triggerInput(inputId) {
+            document.getElementById(inputId).click();
         }
 
         function toggleFases() {
             const isTrifasico = document.getElementsByName('tipoEquipamento')[1].checked;
-            
             document.getElementById('wrapper_corr_mono').style.display = isTrifasico ? 'none' : 'block';
             document.getElementById('wrapper_corr_tri').style.display = isTrifasico ? 'block' : 'none';
             document.getElementById('wrapper_tens_mono').style.display = isTrifasico ? 'none' : 'block';
@@ -837,66 +909,62 @@
         }
 
         function handleFile(input) {
-            const file = input.files[0];
-            if (!file) return;
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
 
-            const preview = document.getElementById('prev_' + input.id);
-            const container = input.closest('.camera-container');
-            const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
 
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    const maxW = 800;
-                    const scale = maxW / img.width;
-                    canvas.width = maxW;
-                    canvas.height = img.height * scale;
+                        if (width > 1200) {
+                            height = Math.round((height * 1200) / width);
+                            width = 1200;
+                        }
 
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    
-                    const base64 = canvas.toDataURL('image/jpeg', 0.7);
-                    
-                    imagensComprimidas[input.id] = base64;
-                    preview.src = base64;
-                    preview.style.display = 'block';
-                    if (container) container.classList.add('has-image');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const compressedImage = canvas.toDataURL('image/jpeg', 0.72);
+                        imagensComprimidas[input.id] = compressedImage;
+
+                        const previewId = 'prev_' + input.id;
+                        const preview = document.getElementById(previewId);
+                        preview.src = compressedImage;
+
+                        input.parentElement.classList.add('has-image');
+                    };
+                    img.src = e.target.result;
                 };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
 
-        function selectStatus(element, val) {
-            document.querySelectorAll('.status-option').forEach(el => el.classList.remove('selected'));
-            element.classList.add('selected');
-            element.querySelector('input').checked = true;
+                reader.readAsDataURL(file);
+            }
         }
 
         function updateProgress() {
-            const pct = (currentScreen / totalScreens) * 100;
-            document.getElementById('progressFill').style.width = pct + '%';
+            const progress = (currentScreen / totalScreens) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
         }
 
         function validateScreen(screenNum) {
-            const activeScreen = document.getElementById('screen' + screenNum);
-            const inputs = activeScreen.querySelectorAll('input[required], select[required], textarea[required]');
+            const screen = document.getElementById('screen' + screenNum);
+            const inputs = screen.querySelectorAll('input[required], textarea[required], select[required]');
             
             for (let input of inputs) {
-                if (input.offsetParent === null) continue;
-
+                if (input.style.display === 'none') continue;
+                
                 if (input.type === 'file') {
                     if (!imagensComprimidas[input.id]) {
-                        const labelText = input.closest('.form-group').querySelector('label').innerText.replace('*', '').trim();
-                        alert('Por favor, anexe a foto obrigatória: ' + labelText);
+                        alert(`Por favor, anexe a foto: ${input.parentElement.parentElement.querySelector('label').textContent}`);
                         return false;
                     }
-                } else if (!input.value.trim()) {
-                    const labelText = input.closest('.form-group').querySelector('label').innerText.replace('*', '').trim();
-                    alert('Por favor, preencha o campo obrigatório: ' + labelText);
-                    input.focus();
+                } else if (input.value.trim() === '') {
+                    alert(`Por favor, preencha: ${input.parentElement.querySelector('label').textContent}`);
                     return false;
                 }
             }
@@ -921,8 +989,14 @@
             window.scrollTo(0,0);
         }
 
+        function selectStatus(element, value) {
+            document.querySelectorAll('.status-option').forEach(el => el.classList.remove('selected'));
+            element.classList.add('selected');
+            document.querySelector(`input[value="${value}"]`).checked = true;
+        }
+
         function generatePDF() {
-            document.getElementById('loadingSpinner').style.display = 'flex';
+            document.getElementById('loadingSpinner').classList.add('show');
 
             setTimeout(() => {
                 const { jsPDF } = window.jspdf;
@@ -1014,10 +1088,10 @@
                     ["1. Evaporadora", "3"],
                     ["2. Filtros de Ar", "3"],
                     ["3. Condensadora", "4"],
-                    ["4. Verificação de Corrente Elétrica", "5"],
+                    ["4. Verificação de Corrente Elétrica", "4"],
                     ["5. Verificação de Tensão Elétrica", "5"],
-                    ["6. Observações Adicionais", "6"],
-                    ["7. Status Operacional Final", "7"]
+                    ["6. Observações Adicionais", "5"],
+                    ["7. Status Operacional Final", "6"]
                 ];
 
                 let ySumario = 55;
@@ -1080,62 +1154,40 @@
                 pdf.setFont('Helvetica', 'bold');
                 pdf.setFontSize(14);
                 pdf.setTextColor('#0076df');
-                pdf.text('3. Condensador', 15, 38);
+                pdf.text('3. Condensador - Antes e Depois da Limpeza', 15, 38);
 
                 pdf.setFont('Helvetica', 'normal');
                 pdf.setFontSize(10);
                 pdf.setTextColor('#1a1a1a');
                 pdf.text('Foi realizada inspeção e limpeza do condensador, removendo resíduos que poderiam comprometer a troca térmica do equipamento.', 15, 44, {maxWidth: 180});
 
-                if(imagensComprimidas['img_cond_antes']) pdf.addImage(imagensComprimidas['img_cond_antes'], 'JPEG', 15, 56, 180, 95);
-                pdf.text(`Figura 0${totalFiguras++} – Condensador Antes da Limpeza`, 15, 155);
-
-                if(imagensComprimidas['img_cond_depois']) pdf.addImage(imagensComprimidas['img_cond_depois'], 'JPEG', 15, 168, 180, 95);
-                pdf.text(`Figura 0${totalFiguras++} – Condensador Após Limpeza`, 15, 267);
-
-                pdf.addPage();
-                desenharCabecalho(pdf);
-
-                pdf.setFont('Helvetica', 'bold');
-                pdf.setFontSize(14);
-                pdf.setTextColor('#0076df');
-                pdf.text('4. Verificações Elétricas - Corrente', 15, 38);
-
-                if(!isTrifasico) {
-                    if(imagensComprimidas['img_corr_m']) pdf.addImage(imagensComprimidas['img_corr_m'], 'JPEG', 15, 46, 85, 65);
-                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(9);
-                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Medição de Corrente`, 15, 115);
-                    totalFiguras++;
-                } else {
-                    if(imagensComprimidas['img_corr_r']) pdf.addImage(imagensComprimidas['img_corr_r'], 'JPEG', 15, 46, 55, 65);
-                    if(imagensComprimidas['img_corr_s']) pdf.addImage(imagensComprimidas['img_corr_s'], 'JPEG', 77, 46, 55, 65);
-                    if(imagensComprimidas['img_corr_t']) pdf.addImage(imagensComprimidas['img_corr_t'], 'JPEG', 140, 46, 55, 65);
-                    
-                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(8);
-                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Corrente Fase R`, 15, 115); totalFiguras++;
-                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Corrente Fase S`, 77, 115); totalFiguras++;
-                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Corrente Fase T`, 140, 115); totalFiguras++;
-                }
+                if(imagensComprimidas['img_cond_antes']) pdf.addImage(imagensComprimidas['img_cond_antes'], 'JPEG', 15, 54, 85, 65);
+                if(imagensComprimidas['img_cond_depois']) pdf.addImage(imagensComprimidas['img_cond_depois'], 'JPEG', 110, 54, 85, 65);
+                
+                pdf.setFont('Helvetica', 'italic');
+                pdf.setFontSize(9);
+                pdf.text(`Figura 0${totalFiguras++} – Condensador Antes da Limpeza`, 15, 123);
+                pdf.text(`Figura 0${totalFiguras++} – Condensador Após Limpeza`, 110, 123);
 
                 pdf.setFont('Helvetica', 'bold');
-                pdf.setFontSize(14);
+                pdf.setFontSize(12);
                 pdf.setTextColor('#0076df');
-                pdf.text('5. Verificações Elétricas - Tensão', 15, 135);
+                pdf.text('4. Verificações Elétricas - Corrente', 15, 145);
 
                 if(!isTrifasico) {
-                    if(imagensComprimidas['img_tens_m']) pdf.addImage(imagensComprimidas['img_tens_m'], 'JPEG', 15, 143, 85, 65);
-                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(9);
-                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Medição de Tensão`, 15, 212);
+                    if(imagensComprimidas['img_corr_m']) pdf.addImage(imagensComprimidas['img_corr_m'], 'JPEG', 15, 153, 85, 50);
+                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(8);
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Medição de Corrente`, 15, 207);
                     totalFiguras++;
                 } else {
-                    if(imagensComprimidas['img_tens_r']) pdf.addImage(imagensComprimidas['img_tens_r'], 'JPEG', 15, 143, 55, 65);
-                    if(imagensComprimidas['img_tens_s']) pdf.addImage(imagensComprimidas['img_tens_s'], 'JPEG', 77, 143, 55, 65);
-                    if(imagensComprimidas['img_tens_t']) pdf.addImage(imagensComprimidas['img_tens_t'], 'JPEG', 140, 143, 55, 65);
+                    if(imagensComprimidas['img_corr_r']) pdf.addImage(imagensComprimidas['img_corr_r'], 'JPEG', 15, 153, 50, 50);
+                    if(imagensComprimidas['img_corr_s']) pdf.addImage(imagensComprimidas['img_corr_s'], 'JPEG', 72, 153, 50, 50);
+                    if(imagensComprimidas['img_corr_t']) pdf.addImage(imagensComprimidas['img_corr_t'], 'JPEG', 129, 153, 50, 50);
                     
-                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(8);
-                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Tensão Fase R`, 15, 212); totalFiguras++;
-                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Tensão Fase S`, 77, 212); totalFiguras++;
-                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Tensão Fase T`, 140, 212); totalFiguras++;
+                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(7);
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Corrente Fase R`, 15, 207); totalFiguras++;
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Corrente Fase S`, 72, 207); totalFiguras++;
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Corrente Fase T`, 129, 207); totalFiguras++;
                 }
 
                 pdf.addPage();
@@ -1144,16 +1196,55 @@
                 pdf.setFont('Helvetica', 'bold');
                 pdf.setFontSize(14);
                 pdf.setTextColor('#0076df');
-                pdf.text('6. Observações Complementares', 15, 38);
+                pdf.text('5. Verificações Elétricas - Tensão', 15, 38);
+
+                if(!isTrifasico) {
+                    if(imagensComprimidas['img_tens_m']) pdf.addImage(imagensComprimidas['img_tens_m'], 'JPEG', 15, 46, 85, 65);
+                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(9);
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Medição de Tensão`, 15, 115);
+                    totalFiguras++;
+                } else {
+                    if(imagensComprimidas['img_tens_r']) pdf.addImage(imagensComprimidas['img_tens_r'], 'JPEG', 15, 46, 55, 65);
+                    if(imagensComprimidas['img_tens_s']) pdf.addImage(imagensComprimidas['img_tens_s'], 'JPEG', 77, 46, 55, 65);
+                    if(imagensComprimidas['img_tens_t']) pdf.addImage(imagensComprimidas['img_tens_t'], 'JPEG', 140, 46, 55, 65);
+                    
+                    pdf.setFont('Helvetica', 'italic'); pdf.setFontSize(8);
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Tensão Fase R`, 15, 115); totalFiguras++;
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Tensão Fase S`, 77, 115); totalFiguras++;
+                    pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Tensão Fase T`, 140, 115); totalFiguras++;
+                }
+
+                pdf.setFont('Helvetica', 'bold');
+                pdf.setFontSize(14);
+                pdf.setTextColor('#0076df');
+                pdf.text('6. Observações Complementares', 15, 145);
 
                 pdf.setFont('Helvetica', 'normal');
-                pdf.setFontSize(11);
+                pdf.setFontSize(10);
                 pdf.setTextColor('#1a1a1a');
                 
                 if(obsText === "") {
-                    pdf.text('Nenhuma observação registrada.', 15, 48);
+                    pdf.text('Nenhuma observação registrada.', 15, 155);
                 } else {
-                    pdf.text(obsText, 15, 48, {maxWidth: 180});
+                    pdf.text(obsText, 15, 155, {maxWidth: 180});
+                }
+
+                // Adicionar fotos de observações se existirem
+                let yObsPhotos = 180;
+                for(let i = 1; i <= 3; i++) {
+                    if(imagensComprimidas[`img_obs_${i}`]) {
+                        if(yObsPhotos > 240) {
+                            pdf.addPage();
+                            desenharCabecalho(pdf);
+                            yObsPhotos = 38;
+                        }
+                        pdf.addImage(imagensComprimidas[`img_obs_${i}`], 'JPEG', 15, yObsPhotos, 85, 65);
+                        pdf.setFont('Helvetica', 'italic');
+                        pdf.setFontSize(8);
+                        pdf.text(`Figura ${totalFiguras < 10 ? '0'+totalFiguras : totalFiguras} – Observação Adicional ${i}`, 15, yObsPhotos + 70);
+                        totalFiguras++;
+                        yObsPhotos += 85;
+                    }
                 }
 
                 pdf.addPage();
@@ -1201,7 +1292,7 @@
 
                 pdf.save(`Preventiva_HVAC_${tagEquip}_OS_${numOs}.pdf`);
                 
-                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('loadingSpinner').classList.remove('show');
             }, 800);
         }
     </script>
